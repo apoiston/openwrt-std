@@ -1,0 +1,171 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 20 * * *"
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: write
+
+    steps:
+      - name: Set timezone
+        run: |
+          sudo timedatectl set-timezone Asia/Shanghai
+          date +"%Y-%m-%d %H:%M:%S %z"
+                    
+      - name: Display system info
+        run: |
+          date +"%Y-%m-%d %H:%M:%S %z"
+          lscpu | grep -E '^Architecture|^CPU\(s\):|^Model name'
+          uname -sr
+          lsb_release -a
+          free -h
+          df -Th
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Build
+        uses: apoiston/actions@image
+        with:
+          private_key: ${{ secrets.PRIVATE_KEY }}
+          public_key: ${{ secrets.PUBLIC_KEY }}
+          prepare_compile: ${{ secrets.PREPARE_COMPILE }}
+          prepare_configure: ${{ secrets.PREPARE_CONFIGURE }}
+          prepare_image: ${{ secrets.PREPARE_IMAGE }}
+          config_buildinfo: builder/config.buildinfo
+          enable_build_toolchain: true
+          enable_build_kernel: true
+          enable_build_full: true
+          enable_prepare_image: true
+
+      - name: Prepare
+        continue-on-error: true
+        run: |
+          rsync -a --quiet --include='*.buildinfo' --exclude='*' openwrt/builder/ buildinfo/
+
+      - name: Commit
+        continue-on-error: true
+        run: |
+          git add buildinfo/
+          git commit -m "build: $(date +"%Y-%m-%d %H:%M:%S %z") [IMAGE]"
+          git push origin main --force
+
+      - name: Create tag
+        id: create_tag
+        run: |
+          TAG="$(date '+%y.%m.%d')"
+          if git ls-remote --tags origin "$TAG" | grep -q "$TAG"; then
+            git push origin --delete "$TAG" || true
+          fi
+          git tag -d "$TAG" 2>/dev/null || true
+          git tag "$TAG"
+          git push origin "$TAG"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Release
+        uses: softprops/action-gh-release@v3
+        with:
+          name: OpenWrt SNAPSHOT ${{ steps.create_tag.outputs.tag }}
+          tag_name: ${{ steps.create_tag.outputs.tag }}
+          body_path: openwrt/CHANGELOG.md
+          files: |
+            openwrt/builder/*.gz
+            openwrt/builder/*.zst
+            openwrt/builder/*.txt
+          make_latest: true
+          draft: false
+          prerelease: false
+
+      - name: Upload
+        uses: actions/upload-artifact@v7
+        with:
+          name: packages
+          path: |
+            openwrt/builder-extra/
+            openwrt/builder-kmods/
+            openwrt/builder-packages/
+
+  deploy:
+    needs: build
+    name: Deploy ${{ matrix.branch }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - directory: builder-extra
+            project_name: initextra
+            branch: extra
+            tag: EXTRA
+          - directory: builder-kmods
+            project_name: initkmods
+            branch: kmods
+            tag: KMODS
+          - directory: builder-packages
+            project_name: initpackages
+            branch: packages
+            tag: PACKAGES
+
+    steps:
+      - name: Set timezone
+        id: timezone
+        run: |
+          sudo timedatectl set-timezone Asia/Shanghai
+          date +"%Y-%m-%d %H:%M:%S %z"
+          echo "time=$(date +"%Y-%m-%d %H:%M:%S %z")" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Download
+        uses: actions/download-artifact@v8
+        with:
+          name: packages
+
+      - name: Prepare
+        continue-on-error: true
+        run: |
+          date +"%Y-%m-%d %H:%M:%S %z"
+          git clone --depth=1 --quiet --branch packages https://github.com/apoiston/index.git
+          sed -i "s/N\/A/$(date +"%Y-%m-%d %H:%M:%S %z")/g" index/index.html
+          rsync -a --quiet --include='*.html' --include='*.css' --include='*.js' --exclude='*' index/ ${{ matrix.directory }}/
+          printf '%s' "${{ secrets.PUBLIC_KEY }}" > ${{ matrix.directory }}/public-key.pem
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ matrix.directory }}
+          publish_branch: ${{ matrix.branch }}
+          full_commit_message: "build: ${{ steps.timezone.outputs.time }} [${{ matrix.tag }}]"
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          force_orphan: true
+          keep_files: false
+          disable_nojekyll: true
+
+  clean:
+    needs: deploy
+    name: Clean pages
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clean pages
+        uses: apoiston/actions@clean
+        with:
+          cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          project_name: initextra initkmods initpackages
+          enable_clean_preview: true

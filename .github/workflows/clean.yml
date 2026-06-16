@@ -1,0 +1,37 @@
+name: Clean
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 0"
+
+jobs:
+  clean-pages:
+    name: Clean pages
+    runs-on: ubuntu-latest
+          
+    steps:
+      - name: Clean pages
+        uses: apoiston/actions@clean
+        with:
+          cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          project_name: initextra initkmods initpackages
+          enable_clean_pages: true 
+
+  clean-releases:
+    name: Clean releases
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Clean releases
+        uses: apoiston/actions@clean
+        with:
+          enable_clean_releases: true

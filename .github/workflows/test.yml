@@ -1,0 +1,51 @@
+name: Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set timezone
+        run: |
+          sudo timedatectl set-timezone Asia/Shanghai
+          date +"%Y-%m-%d %H:%M:%S %z"
+
+      - name: Display system info
+        run: |
+          date +"%Y-%m-%d %H:%M:%S %z"
+          lscpu | grep -E '^Architecture|^CPU\(s\):|^Model name'
+          uname -sr
+          lsb_release -a
+          free -h
+          df -Th
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Build
+        uses: apoiston/actions@image
+        with:
+          private_key: ${{ secrets.PRIVATE_KEY }}
+          public_key: ${{ secrets.PUBLIC_KEY }}
+          prepare_compile: ${{ secrets.PREPARE_COMPILE }}
+          prepare_configure: ${{ secrets.PREPARE_CONFIGURE }}
+          prepare_image: ${{ secrets.PREPARE_IMAGE }}
+          config_buildinfo: builder/config.buildinfo
+          enable_build_toolchain: true
+          enable_build_kernel: true
+          enable_build_full: true
+          enable_prepare_image: true
+
+      - name: Upload
+        uses: actions/upload-artifact@v7
+        with:
+          name: image
+          path: |
+            openwrt/builder/
+            openwrt/builder-extra/
+            openwrt/builder-kmods/
+            openwrt/builder-packages/
