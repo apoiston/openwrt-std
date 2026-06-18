@@ -1,6 +1,6 @@
-# 2026-06-18 07:00:53 +0800
+# 2026-06-19 07:33:16 +0800
 apk-mbedtls - 3.0.5-r3
-base-files - 1702~bd13b32899
+base-files - 1702~4ec2d6dd97
 bash - 5.3-r3
 block-mount - 2026.05.23~16718b6e-r1
 bnx2-firmware - 20260519-r1
@@ -190,7 +190,7 @@ libnl-nf200 - 3.12.0-r2
 libnl-route200 - 3.12.0-r2
 libnl-tiny1 - 2025.12.02~40493a65-r1
 libnl200 - 3.12.0-r2
-libopenssl3 - 3.5.6-r1
+libopenssl3 - 3.5.7-r1
 libpcre2 - 10.47-r1
 libpthread - 1.2.6-r5
 libreadline8 - 8.3-r1
@@ -212,24 +212,24 @@ libwrap - 7.6-r4
 libxml2-16 - 2.15.3-r1
 logd - 2025.10.30~6f78fa49-r1
 lsqlite3 - 0.9.5-r1
-luci-app-firewall - 26.167.80091~f851025
+luci-app-firewall - 26.169.45219~769cb13
 luci-app-nikki - 1.26.1-r1
-luci-app-package-manager - 26.167.80091~f851025
-luci-base - 26.167.80091~f851025
-luci-i18n-base-zh-cn - 26.167.80091~f851025
-luci-i18n-firewall-zh-cn - 26.167.80091~f851025
+luci-app-package-manager - 26.169.45219~769cb13
+luci-base - 26.169.45219~769cb13
+luci-i18n-base-zh-cn - 26.169.45219~769cb13
+luci-i18n-firewall-zh-cn - 26.169.45219~769cb13
 luci-i18n-nikki-zh-cn - 26.167.13698~f08bd69
-luci-i18n-package-manager-zh-cn - 26.167.80091~f851025
-luci-lib-jsonc - 26.167.80091~f851025
-luci-lib-uqr - 26.167.80091~f851025
-luci-mod-admin-full - 26.167.80091~f851025
-luci-mod-network - 26.167.80091~f851025
-luci-mod-status - 26.167.80091~f851025
-luci-mod-system - 26.167.80091~f851025
-luci-nginx - 26.167.80091~f851025
-luci-proto-ipv6 - 26.167.80091~f851025
-luci-proto-ppp - 26.167.80091~f851025
-luci-theme-bootstrap - 26.167.80091~f851025
+luci-i18n-package-manager-zh-cn - 26.169.45219~769cb13
+luci-lib-jsonc - 26.169.45219~769cb13
+luci-lib-uqr - 26.169.45219~769cb13
+luci-mod-admin-full - 26.169.45219~769cb13
+luci-mod-network - 26.169.45219~769cb13
+luci-mod-status - 26.169.45219~769cb13
+luci-mod-system - 26.169.45219~769cb13
+luci-nginx - 26.169.45219~769cb13
+luci-proto-ipv6 - 26.169.45219~769cb13
+luci-proto-ppp - 26.169.45219~769cb13
+luci-theme-bootstrap - 26.169.45219~769cb13
 mihomo-alpha - 2026.06.17~8e2aba4
 mkf2fs - 1.16.0-r4
 mtd - 28
@@ -243,7 +243,7 @@ nginx-ssl - 1.31.2-r1
 nginx-ssl-util - 1.7-r2
 nikki - 2026.04.08-r1
 odhcp6c - 2026.06.04~daf4ec30-r1
-odhcpd-ipv6only - 2026.06.14~c6792bac-r1
+odhcpd-ipv6only - 2026.06.18~03dacc23-r1
 open-vm-tools - 13.1.0-r1
 openssh-sftp-server - 10.3_p1-r2
 openwrt-keyring - 2025.12.10~f0670054-r1
