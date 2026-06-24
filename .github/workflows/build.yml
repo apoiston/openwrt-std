@@ -29,7 +29,7 @@ jobs:
           df -Th
 
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Configure git
         run: |
@@ -127,7 +127,7 @@ jobs:
           echo "time=$(date +"%Y-%m-%d %H:%M:%S %z")" >> "$GITHUB_OUTPUT"
 
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Download
         uses: actions/download-artifact@v8
