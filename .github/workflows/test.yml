@@ -2,6 +2,18 @@ name: Test
 
 on:
   workflow_dispatch:
+    inputs:
+      enable_build_tools:
+        description: 'Build tools'
+        required: false
+        type: boolean
+        default: false
+
+      enable_build_kernel:
+        description: 'Build kernel'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   build:
@@ -35,9 +47,8 @@ jobs:
           prepare_config: ${{ secrets.PREPARE_CONFIG }}
           export_image: ${{ secrets.EXPORT_IMAGE }}
           config_buildinfo: builder/config.buildinfo
-          enable_build_toolchain: true
-          enable_build_kernel: true
-          enable_build_full: true
+          enable_build_tools: ${{ inputs.enable_build_tools == true && 'true' || 'false' }}
+          enable_build_kernel: ${{ inputs.enable_build_kernel == true && 'true' || 'false' }}
           enable_export_image: true
 
       - name: Upload
