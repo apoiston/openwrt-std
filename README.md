@@ -1,4 +1,4 @@
-# OpenWrt SNAPSHOT
+# OpenWrt
 
 ---
 
@@ -12,7 +12,7 @@
 
 ### Firmware Download
 
-- [Releases](https://github.com/apoiston/openwrt-builder/releases)
+- [Releases](https://github.com/apoiston/builder/releases)
 
 ### Package Download
 
