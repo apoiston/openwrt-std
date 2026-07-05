@@ -56,16 +56,15 @@ jobs:
           public_key: ${{ secrets.PUBLIC_KEY }}
           prepare_environment: ${{ secrets.PREPARE_ENVIRONMENT }}
           prepare_config: ${{ secrets.PREPARE_CONFIG }}
-          export_image: ${{ secrets.EXPORT_IMAGE }}
+          export_dist: ${{ secrets.EXPORT_DIST }}
           config_buildinfo: builder/config.buildinfo
           enable_build_tools: ${{ inputs.enable_build_tools == true && 'true' || 'false' }}
           enable_build_kernel: ${{ inputs.enable_build_kernel == true && 'true' || 'false' }}
-          enable_export_image: true
 
       - name: Prepare
         continue-on-error: true
         run: |
-          rsync -a --quiet --include='*.buildinfo' --exclude='*' openwrt/builder/ buildinfo/
+          rsync -a --quiet --include='*.buildinfo' --exclude='*' "$WORK_DIR/builder/" buildinfo/
 
       - name: Commit
         continue-on-error: true
@@ -91,11 +90,11 @@ jobs:
         with:
           name: OpenWrt ${{ steps.create_tag.outputs.tag }}
           tag_name: ${{ steps.create_tag.outputs.tag }}
-          body_path: openwrt/CHANGELOG.md
+          body_path: ${{ env.WORK_DIR }}/CHANGELOG.md
           files: |
-            openwrt/builder/*.gz
-            openwrt/builder/*.zst
-            openwrt/builder/*.txt
+            ${{ env.WORK_DIR }}/builder/*.gz
+            ${{ env.WORK_DIR }}/builder/*.zst
+            ${{ env.WORK_DIR }}/builder/*.txt
           make_latest: true
           draft: false
           prerelease: false
@@ -105,8 +104,8 @@ jobs:
         with:
           name: packages
           path: |
-            openwrt/builder-extra/
-            openwrt/builder-packages/
+            ${{ env.WORK_DIR }}/builder-extra/
+            ${{ env.WORK_DIR }}/builder-packages/
 
   deploy:
     needs: build
