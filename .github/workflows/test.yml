@@ -24,11 +24,11 @@ jobs:
       - name: Set timezone
         run: |
           sudo timedatectl set-timezone Asia/Shanghai
-          date +"%Y-%m-%d %H:%M:%S %z"
+          date +"%Y-%m-%d %H:%M:%S %:z"
 
       - name: Show runner info
         run: |
-          date +"%Y-%m-%d %H:%M:%S %z"
+          date +"%Y-%m-%d %H:%M:%S %:z"
           lscpu | grep -E '^Architecture|^CPU\(s\):|^Model name'
           uname -sr
           lsb_release -a

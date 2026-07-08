@@ -30,11 +30,11 @@ jobs:
       - name: Set timezone
         run: |
           sudo timedatectl set-timezone Asia/Shanghai
-          date +"%Y-%m-%d %H:%M:%S %z"
+          date +"%Y-%m-%d %H:%M:%S %:z"
                     
       - name: Show runner info
         run: |
-          date +"%Y-%m-%d %H:%M:%S %z"
+          date +"%Y-%m-%d %H:%M:%S %:z"
           lscpu | grep -E '^Architecture|^CPU\(s\):|^Model name'
           uname -sr
           lsb_release -a
@@ -69,7 +69,7 @@ jobs:
         continue-on-error: true
         run: |
           git add buildinfo/
-          git commit -m "$(date +"%Y-%m-%d %H:%M:%S %z") [IMAGE]"
+          git commit -m "$(date +"%Y-%m-%d %H:%M:%S %:z") [IMAGE]"
           git push origin main --force
 
       - name: Create tag
@@ -126,8 +126,8 @@ jobs:
         id: timezone
         run: |
           sudo timedatectl set-timezone Asia/Shanghai
-          date +"%Y-%m-%d %H:%M:%S %z"
-          echo "time=$(date +"%Y-%m-%d %H:%M:%S %z")" >> "$GITHUB_OUTPUT"
+          date +"%Y-%m-%d %H:%M:%S %:z"
+          echo "time=$(date +"%Y-%m-%d %H:%M:%S %:z")" >> "$GITHUB_OUTPUT"
 
       - name: Checkout
         uses: actions/checkout@v7
@@ -140,7 +140,6 @@ jobs:
       - name: Prepare
         continue-on-error: true
         run: |
-          date +"%Y-%m-%d %H:%M:%S %z"
           printf '%s' "${{ secrets.PUBLIC_KEY }}" > ${{ matrix.directory }}/public-key.pem
 
       - name: Deploy
