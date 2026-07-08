@@ -28,7 +28,7 @@ jobs:
         with:
           cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          project_name: initextra initkmods initpackages
+          project_name: initbase initextra initluci initpackages
           enable_delete_deployments: true 
           delete_deployments_days: ${{ inputs.delete_deployments_days || '30' }}
 

@@ -103,7 +103,9 @@ jobs:
         with:
           name: packages
           path: |
+            ${{ env.WORK_DIR }}/builder-base/
             ${{ env.WORK_DIR }}/builder-extra/
+            ${{ env.WORK_DIR }}/builder-luci/
             ${{ env.WORK_DIR }}/builder-packages/
 
   deploy:
@@ -114,9 +116,15 @@ jobs:
     strategy:
       matrix:
         include:
+          - directory: builder-base
+            branch: base
+            tag: BASE
           - directory: builder-extra
             branch: extra
             tag: EXTRA
+          - directory: builder-luci
+            branch: luci
+            tag: LUCI
           - directory: builder-packages
             branch: packages
             tag: PACKAGES
@@ -166,5 +174,5 @@ jobs:
         with:
           cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          project_name: initextra initpackages
+          project_name: initbase initextra initluci initpackages
           enable_delete_preview: true
