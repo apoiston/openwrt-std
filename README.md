@@ -16,11 +16,17 @@
 
 ### Package Download
 
+- [base](https://initbase.pages.dev/)
+
 - [extra](https://initextra.pages.dev/)
+
+- [luci](https://initluci.pages.dev/)
+
+- [packages](https://initpackages.pages.dev/)
 
 - [kmods](https://initkmods.pages.dev/)
 
-- [packages](https://initpackages.pages.dev/)
+- [system](https://initsystem.pages.dev/)
 
 ### Common Commands
 
