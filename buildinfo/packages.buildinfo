@@ -1,5 +1,5 @@
 apk-mbedtls - 3.0.5-r3
-base-files - 1703~baeacca598
+base-files - 1703~b0a03893cb
 bash - 5.3-r4
 block-mount - 2026.05.23~16718b6e-r1
 bnx2-firmware - 20260622-r1
@@ -218,11 +218,13 @@ logd - 2025.10.30~6f78fa49-r1
 lsqlite3 - 0.9.5-r1
 luci-app-firewall - 26.190.71895~a18dc50
 luci-app-nikki - 1.26.1-r1
+luci-app-openlist - 26.190.71895~a18dc50
 luci-app-package-manager - 26.190.71895~a18dc50
 luci-base - 26.190.71895~a18dc50
 luci-i18n-base-zh-cn - 26.190.71895~a18dc50
 luci-i18n-firewall-zh-cn - 26.190.71895~a18dc50
 luci-i18n-nikki-zh-cn - 26.189.03512~e6dfafd
+luci-i18n-openlist-zh-cn - 26.190.71895~a18dc50
 luci-i18n-package-manager-zh-cn - 26.190.71895~a18dc50
 luci-lib-jsonc - 26.190.71895~a18dc50
 luci-lib-uqr - 26.190.71895~a18dc50
@@ -241,6 +243,7 @@ netifd - 2026.07.08~6088f7b3-r1
 nfs-kernel-server - 2.9.1-r1
 nfs-utils - 2.9.1-r1
 nftables-json - 1.1.6-r4
+nginx-mod-dav-ext - 1.31.2-r1
 nginx-mod-luci - 1.31.2-r1
 nginx-mod-ubus - 1.31.2-r1
 nginx-ssl - 1.31.2-r1
@@ -249,6 +252,7 @@ nikki - 2026.04.08-r1
 odhcp6c - 2026.06.27~10a52220-r2
 odhcpd-ipv6only - 2026.06.28~68f38269-r1
 open-vm-tools - 13.1.0-r1
+openlist - 4.2.3-r1
 openssh-sftp-server - 10.4_p1-r1
 openwrt-keyring - 2025.12.10~f0670054-r1
 partx-utils - 2.42.2-r1
