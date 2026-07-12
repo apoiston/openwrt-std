@@ -1,5 +1,5 @@
 apk-mbedtls - 3.0.5-r3
-base-files - 1703~412526f0fe
+base-files - 1703~e5c7612b16
 bash - 5.3-r4
 block-mount - 2026.05.23~16718b6e-r1
 bnx2-firmware - 20260622-r1
@@ -234,7 +234,7 @@ luci-nginx - 26.192.62547~5cf20c5
 luci-proto-ipv6 - 26.192.62547~5cf20c5
 luci-proto-ppp - 26.192.62547~5cf20c5
 luci-theme-bootstrap - 26.192.62547~5cf20c5
-mihomo-alpha - 2026.07.11~75eeba4
+mihomo-alpha - 2026.07.13~2b2bdf6
 mkf2fs - 1.16.0-r4
 mtd - 28
 netifd - 2026.07.08~6088f7b3-r2
