@@ -63,7 +63,7 @@ jobs:
       - name: Prepare
         continue-on-error: true
         run: |
-          rsync -a --quiet --include='*.buildinfo' --exclude='*' "$WORK_DIR/builder/" buildinfo/
+          rsync -a --quiet --include='*.buildinfo' --exclude='*' "$WORK_DIR/dist/" buildinfo/
 
       - name: Commit
         continue-on-error: true
@@ -91,9 +91,9 @@ jobs:
           tag_name: ${{ steps.create_tag.outputs.tag }}
           body_path: ${{ env.WORK_DIR }}/CHANGELOG.md
           files: |
-            ${{ env.WORK_DIR }}/builder/*.gz
-            ${{ env.WORK_DIR }}/builder/*.zst
-            ${{ env.WORK_DIR }}/builder/*.txt
+            ${{ env.WORK_DIR }}/dist/*.gz
+            ${{ env.WORK_DIR }}/dist/*.zst
+            ${{ env.WORK_DIR }}/dist/*.txt
           make_latest: true
           draft: false
           prerelease: false
@@ -103,12 +103,12 @@ jobs:
         with:
           name: packages
           path: |
-            ${{ env.WORK_DIR }}/builder-base/
-            ${{ env.WORK_DIR }}/builder-extra/
-            ${{ env.WORK_DIR }}/builder-luci/
-            ${{ env.WORK_DIR }}/builder-packages/
-            ${{ env.WORK_DIR }}/builder-kmods/
-            ${{ env.WORK_DIR }}/builder-system/
+            ${{ env.WORK_DIR }}/dist-base/
+            ${{ env.WORK_DIR }}/dist-extra/
+            ${{ env.WORK_DIR }}/dist-luci/
+            ${{ env.WORK_DIR }}/dist-packages/
+            ${{ env.WORK_DIR }}/dist-kmods/
+            ${{ env.WORK_DIR }}/dist-system/
 
   deploy:
     needs: build
@@ -118,22 +118,22 @@ jobs:
     strategy:
       matrix:
         include:
-          - directory: builder-base
+          - directory: dist-base
             branch: base
             tag: BASE
-          - directory: builder-extra
+          - directory: dist-extra
             branch: extra
             tag: EXTRA
-          - directory: builder-luci
+          - directory: dist-luci
             branch: luci
             tag: LUCI
-          - directory: builder-packages
+          - directory: dist-packages
             branch: packages
             tag: PACKAGES
-          - directory: builder-kmods
+          - directory: dist-kmods
             branch: kmods
             tag: KMODS
-          - directory: builder-system
+          - directory: dist-system
             branch: system
             tag: SYSTEM
 

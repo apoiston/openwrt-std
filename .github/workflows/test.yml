@@ -54,8 +54,8 @@ jobs:
         with:
           name: image
           path: |
-            ${{ env.WORK_DIR }}/builder/
-            ${{ env.WORK_DIR }}/builder-base/
-            ${{ env.WORK_DIR }}/builder-extra/
-            ${{ env.WORK_DIR }}/builder-luci/
-            ${{ env.WORK_DIR }}/builder-packages/
+            ${{ env.WORK_DIR }}/dist/
+            ${{ env.WORK_DIR }}/dist-base/
+            ${{ env.WORK_DIR }}/dist-extra/
+            ${{ env.WORK_DIR }}/dist-luci/
+            ${{ env.WORK_DIR }}/dist-packages/
