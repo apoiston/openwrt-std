@@ -1,0 +1,63 @@
+name: Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      enable_build_tools:
+        description: 'Build tools'
+        required: false
+        type: boolean
+        default: false
+
+      enable_build_kernel:
+        description: 'Build kernel'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-26.04
+
+    steps:
+      - name: Set timezone
+        run: |
+          sudo timedatectl set-timezone Asia/Shanghai
+          date +"%Y-%m-%d %H:%M:%S %:z"
+
+      - name: Inspect runner
+        run: |
+          date +"%Y-%m-%d %H:%M:%S %:z"
+          lscpu | grep -E '^Architecture|^CPU\(s\):|^Model name'
+          uname -sr
+          lsb_release -a
+          free -h
+          df -Th
+
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Build
+        uses: apoiston/actions@builder
+        with:
+          private_key: ${{ secrets.PRIVATE_KEY }}
+          public_key: ${{ secrets.PUBLIC_KEY }}
+          prepare_base: ${{ secrets.PREPARE_BASE }}
+          extend_config: ${{ secrets.EXTEND_CONFIG }}
+          export_dist: ${{ secrets.EXPORT_DIST }}
+          enable_build_tools: ${{ inputs.enable_build_tools == true && 'true' || 'false' }}
+          enable_build_kernel: ${{ inputs.enable_build_kernel == true && 'true' || 'false' }}
+
+      - name: Upload
+        uses: actions/upload-artifact@v7
+        with:
+          name: image
+          path: |
+            ${{ env.WORK_DIR }}/dist/
+            ${{ env.WORK_DIR }}/dist-base/
+            ${{ env.WORK_DIR }}/dist-luci/
+            ${{ env.WORK_DIR }}/dist-packages/
+            ${{ env.WORK_DIR }}/dist-kmods/
+            ${{ env.WORK_DIR }}/dist-system/
+            ${{ env.WORK_DIR }}/dist-extra/

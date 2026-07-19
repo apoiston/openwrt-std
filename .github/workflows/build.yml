@@ -1,0 +1,185 @@
+name: Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      enable_build_tools:
+        description: 'Build tools'
+        required: false
+        type: boolean
+        default: false
+
+      enable_build_kernel:
+        description: 'Build kernel'
+        required: false
+        type: boolean
+        default: false
+
+  schedule:
+    - cron: "9 20 * * *"
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-26.04
+    permissions:
+      actions: write
+      contents: write
+
+    steps:
+      - name: Set timezone
+        run: |
+          sudo timedatectl set-timezone Asia/Shanghai
+          date +"%Y-%m-%d %H:%M:%S %:z"
+                    
+      - name: Inspect runner
+        run: |
+          date +"%Y-%m-%d %H:%M:%S %:z"
+          lscpu | grep -E '^Architecture|^CPU\(s\):|^Model name'
+          uname -sr
+          lsb_release -a
+          free -h
+          df -Th
+
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup bot
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Build
+        uses: apoiston/actions@builder
+        with:
+          private_key: ${{ secrets.PRIVATE_KEY }}
+          public_key: ${{ secrets.PUBLIC_KEY }}
+          prepare_base: ${{ secrets.PREPARE_BASE }}
+          extend_config: ${{ secrets.EXTEND_CONFIG }}
+          export_dist: ${{ secrets.EXPORT_DIST }}
+          enable_build_tools: ${{ inputs.enable_build_tools == true && 'true' || 'false' }}
+          enable_build_kernel: ${{ inputs.enable_build_kernel == true && 'true' || 'false' }}
+
+      - name: Prepare
+        continue-on-error: true
+        run: |
+          rsync -a --quiet --include='*.buildinfo' --exclude='*' "$WORK_DIR/dist/" outputs/
+
+      - name: Commit
+        continue-on-error: true
+        run: |
+          git add outputs/
+          git commit -m "$(date +"%Y-%m-%d %H:%M:%S %:z") [IMAGE]"
+          git push origin main --force
+
+      - name: Create tag
+        id: create_tag
+        run: |
+          TAG="$(date '+%y.%m.%d')"
+          if git ls-remote --tags origin "$TAG" | grep -q "$TAG"; then
+            git push origin --delete "$TAG" || true
+          fi
+          git tag -d "$TAG" 2>/dev/null || true
+          git tag "$TAG"
+          git push origin "$TAG"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Release
+        uses: softprops/action-gh-release@v3
+        with:
+          name: OpenWrt ${{ steps.create_tag.outputs.tag }}
+          tag_name: ${{ steps.create_tag.outputs.tag }}
+          body_path: ${{ env.WORK_DIR }}/CHANGELOG.md
+          files: |
+            ${{ env.WORK_DIR }}/dist/*.gz
+            ${{ env.WORK_DIR }}/dist/*.txt
+          make_latest: true
+          draft: false
+          prerelease: false
+
+      - name: Upload
+        uses: actions/upload-artifact@v7
+        with:
+          name: packages
+          path: |
+            ${{ env.WORK_DIR }}/dist-base/
+            ${{ env.WORK_DIR }}/dist-luci/
+            ${{ env.WORK_DIR }}/dist-packages/
+            ${{ env.WORK_DIR }}/dist-kmods/
+            ${{ env.WORK_DIR }}/dist-system/
+            ${{ env.WORK_DIR }}/dist-extra/
+
+  deploy:
+    needs: build
+    name: Deploy ${{ matrix.branch }}
+    runs-on: ubuntu-26.04
+
+    strategy:
+      matrix:
+        include:
+          - directory: dist-base
+            branch: base
+            tag: BASE
+          - directory: dist-luci
+            branch: luci
+            tag: LUCI
+          - directory: dist-packages
+            branch: packages
+            tag: PACKAGES
+          - directory: dist-kmods
+            branch: kmods
+            tag: KMODS
+          - directory: dist-system
+            branch: system
+            tag: SYSTEM
+          - directory: dist-extra
+            branch: extra
+            tag: EXTRA
+
+    steps:
+      - name: Set timezone
+        id: timezone
+        run: |
+          sudo timedatectl set-timezone Asia/Shanghai
+          date +"%Y-%m-%d %H:%M:%S %:z"
+          echo "time=$(date +"%Y-%m-%d %H:%M:%S %:z")" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Download
+        uses: actions/download-artifact@v8
+        with:
+          name: packages
+
+      - name: Prepare
+        continue-on-error: true
+        run: |
+          printf '%s' "${{ secrets.PUBLIC_KEY }}" > ${{ matrix.directory }}/public-key.pem
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ matrix.directory }}
+          publish_branch: ${{ matrix.branch }}
+          full_commit_message: "${{ steps.timezone.outputs.time }} [${{ matrix.tag }}]"
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          force_orphan: true
+          keep_files: false
+          disable_nojekyll: true
+
+  clean:
+    needs: deploy
+    name: Clean
+    runs-on: ubuntu-26.04
+
+    steps:
+      - name: Delete deployments
+        uses: apoiston/actions@cleaner
+        with:
+          cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          project_name: initbase initluci initpackages initkmods initsystem initextra
+          enable_delete_preview: true

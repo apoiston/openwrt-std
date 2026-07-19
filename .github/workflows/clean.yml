@@ -1,0 +1,51 @@
+name: Clean
+
+on:
+  workflow_dispatch:
+    inputs:
+      delete_deployments_days:
+        description: 'Deployment retention days'
+        required: false
+        type: string
+        default: '30'
+      delete_releases_days:
+        description: 'Release retention days'
+        required: false
+        type: string
+        default: '30'
+
+  schedule:
+    - cron: "39 19 * * 6"
+
+jobs:
+  delete-deployments:
+    name: Delete deployments
+    runs-on: ubuntu-26.04
+          
+    steps:
+      - name: Delete deployments
+        uses: apoiston/actions@cleaner
+        with:
+          cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          project_name: initbase initluci initpackages initextra
+          enable_delete_deployments: true 
+          delete_deployments_days: ${{ inputs.delete_deployments_days || '30' }}
+
+  delete-releases:
+    name: Delete releases
+    runs-on: ubuntu-26.04
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Delete releases
+        uses: apoiston/actions@cleaner
+        with:
+          enable_delete_releases: true
+          delete_releases_days: ${{ inputs.delete_releases_days || '30' }}
