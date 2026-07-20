@@ -1,0 +1,2 @@
+src-git packages https://github.com/openwrt/packages.git^2e945de232bd84ad74ec2b0625e16b0ce9f40131
+src-git luci https://github.com/openwrt/luci.git^7647aa9913294dc83b2212179f05a479c34c1552
