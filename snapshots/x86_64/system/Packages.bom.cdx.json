@@ -1,0 +1,195 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4",
+  "serialNumber": "urn:uuid:f90559e5-0756-4258-85a1-fc8f6792fcd3",
+  "version": "1",
+  "metadata": {
+    "timestamp": "2026-07-24T06:02:39+08:00"
+  },
+  "components": [
+    {
+      "name": "base-files",
+      "version": "1704~aac6df7bdc",
+      "type": "application",
+      "licenses": [
+        {
+          "license": {
+            "name": "GPL-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "block-mount",
+      "version": "2026.05.23~16718b6e-r1",
+      "type": "application",
+      "licenses": [
+        {
+          "license": {
+            "name": "GPL-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "dropbear",
+      "version": "2026.92-r1",
+      "cpe": "cpe:/a:dropbear_ssh_project:dropbear_ssh",
+      "type": "application",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "name": "fstools",
+      "version": "2026.05.23~16718b6e-r1",
+      "type": "application",
+      "licenses": [
+        {
+          "license": {
+            "name": "GPL-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "fwtool",
+      "version": "2025.10.03~04cd252e-r1",
+      "type": "application",
+      "licenses": [
+        {
+          "license": {
+            "name": "GPL-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "grub2",
+      "version": "2.12-r1",
+      "cpe": "cpe:/a:gnu:grub2",
+      "type": "application",
+      "licenses": [
+        {
+          "license": {
+            "name": "GPL-3.0-or-later"
+          }
+        }
+      ]
+    },
+    {
+      "name": "grub2-bios-setup",
+      "version": "2.12-r1",
+      "cpe": "cpe:/a:gnu:grub2",
+      "type": "application",
+      "licenses": [
+        {
+          "license": {
+            "name": "GPL-3.0-or-later"
+          }
+        }
+      ]
+    },
+    {
+      "name": "grub2-efi",
+      "version": "2.12-r1",
+      "cpe": "cpe:/a:gnu:grub2",
+      "type": "application",
+      "licenses": [
+        {
+          "license": {
+            "name": "GPL-3.0-or-later"
+          }
+        }
+      ]
+    },
+    {
+      "name": "libatomic1",
+      "version": "16.1.0-r5",
+      "type": "library",
+      "licenses": [
+        {
+          "license": {
+            "name": "GPL-3.0-with-GCC-exception"
+          }
+        }
+      ]
+    },
+    {
+      "name": "libc",
+      "version": "1.2.6-r5",
+      "type": "library",
+      "licenses": [
+        {
+          "license": {
+            "name": "GPL-3.0-with-GCC-exception"
+          }
+        }
+      ]
+    },
+    {
+      "name": "libgcc1",
+      "version": "16.1.0-r5",
+      "type": "library",
+      "licenses": [
+        {
+          "license": {
+            "name": "GPL-3.0-with-GCC-exception"
+          }
+        }
+      ]
+    },
+    {
+      "name": "libpthread",
+      "version": "1.2.6-r5",
+      "type": "library",
+      "licenses": [
+        {
+          "license": {
+            "name": "GPL-3.0-with-GCC-exception"
+          }
+        }
+      ]
+    },
+    {
+      "name": "librt",
+      "version": "1.2.6-r5",
+      "type": "library",
+      "licenses": [
+        {
+          "license": {
+            "name": "GPL-3.0-with-GCC-exception"
+          }
+        }
+      ]
+    },
+    {
+      "name": "libstdcpp6",
+      "version": "16.1.0-r5",
+      "type": "library",
+      "licenses": [
+        {
+          "license": {
+            "name": "GPL-3.0-with-GCC-exception"
+          }
+        }
+      ]
+    },
+    {
+      "name": "mtd",
+      "version": "28",
+      "type": "application",
+      "licenses": [
+        {
+          "license": {
+            "name": "GPL-2.0+"
+          }
+        }
+      ]
+    }
+  ]
+}
